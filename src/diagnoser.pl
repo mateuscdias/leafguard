@@ -214,92 +214,73 @@ disease('Nematoide Cavernicola',
 
 % Checking algorithms
 
-check_symptoms([],_,1.0).
+% ============================================
+% HELPER PREDICATES
+% ============================================
 
-check_symptoms([Symptom|Rest], Symptoms, Confidence) :-
-    (member(Symptom, Symptoms)
-        -> (check_symptoms(Rest, Symptoms, RestConf), Confidence is (1+RestConf)/length([Symptom|Rest]))
+% Calculate the length of a list
+list_length([], 0).
+list_length([_|T], N) :-
+    list_length(T, N1),
+    N is N1 + 1.
 
-        ;(check_symptoms(Rest,Symptoms,RestConf), Confidence is RestConf/ length(Symptom|Rest))
+% Calculate confidence based on matching items
+calculate_confidence([], _, 1.0).
+calculate_confidence(Required, Observed, Confidence) :-
+    Required \= [],
+    list_length(Required, Total),
+    count_matches(Required, Observed, MatchCount),
+    Confidence is MatchCount / Total.
+
+% Count how many items from Required are in Observed
+count_matches([], _, 0).
+count_matches([H|T], Observed, Count) :-
+    (member(H, Observed) ->
+        count_matches(T, Observed, RestCount),
+        Count is RestCount + 1
+    ;
+        count_matches(T, Observed, RestCount),
+        Count is RestCount
     ).
 
-check_env([],_,1.0).
+% ============================================
+% DIAGNOSIS PREDICATES
+% ============================================
 
-check_env([Factor|Rest],Environment,Confidence) :- 
-    (member(Factor, Environment)
-        
-        -> (check_env(Rest, Environment, RestConf), Confidence is (1+RestConf)/length([Factor|Rest]))
-
-        ; (check_env(Rest, Environment, RestConf), Confidence is RestConf/length([Factor|Rest]))
-    ).
-
-% Getting all possible diseases
-
-possible_diseases(Symptoms, Disease, Confidence) :-
-
-    disease(Disease,_,RequiredSymptoms,_),
-    check_symptoms(RequiredSymptoms,Symptoms,Confidence),
-    Confidence > 0.
-
-% Getting the symptoms of a disease
-
-disease_symptoms(Disease, Symptoms) :-
-    
-    disease(Disease,_, RequiredSymptoms, _),
-    Symptoms = RequiredSymptoms.
-
-% Get disease type
-
-disease_type(Disease, Type) :- 
-    disease(Disease, Type,_,_).
-
-% Get environmental factors for a disease
-
-disease_enviroment(Disease, Environment) :-
-    disease(Disease,_,_,Environment).
-
-% List all diseases
-
-list_all_diseases(Diseases) :- 
-    findall(Disease,disease(Disease,_,_,_),Diseases).
-
-% List symptoms per disease
-
-list_symptoms_by_disease(Disease, SymptomsList) :-
-    disease(Disease,_,SymptomsList,_).
-
-
-% Calculation Predicates
-
-calculate_symptom_score([],_,1.0).
-
-calculate_symptom_score([Symptom|Rest],Symptoms,Score) :-
-
-    (member(Symptom,Symptoms)
-        
-        -> calculate_symptom_score(Rest,Symptoms,RestScore), Score is RestScore + (1.0/length([Symptom|Rest]))
-
-    ; calculate_symptom_score(Rest, Symptoms, RestScore), Score is RestScore).
-
-calculate_env_score([],_,1.0).
-
-calculate_env_score([Factor|Rest],Environment,Score) :- 
-    (member(Factor, Environment) 
-        -> calculate_env_score(Rest, Environment, RestScore), Score is RestScore + (1.0/length([Factor|Rest]))
-    ; calculate_env_score(Rest, Environment, RestScore), Score is Restscore ).
-% DIAGNOSING PREDICATES
-
-diagnose(Symptoms,Environment,Disease,Confidence) :-
-    disease(Disease, Type, RequiredSymptoms, EnvFactors),
-    check_symptoms(RequiredSymptoms,Symptoms,SymptomMatch),
-    check_env(EnvFactors, Environment, EnvMatch),
-    Confidence is (SymptomMatch + EnvMatch) / 2,
+% Main diagnosis predicate
+diagnose(Symptoms, Environment, Disease, Confidence) :-
+    disease(Disease, _, RequiredSymptoms, EnvFactors),
+    calculate_confidence(RequiredSymptoms, Symptoms, SymptomConfidence),
+    calculate_confidence(EnvFactors, Environment, EnvConfidence),
+    Confidence is (SymptomConfidence * 0.7 + EnvConfidence * 0.3),
     Confidence >= 0.5.
 
-diagnose_weighted(Symptoms, Environment, Disease, Score) :-
-    disease(Disease,Type,RequiredSymptoms,EnvFactors),
-    calculate_symptom_score(RequiredSymptoms,Symptoms,SymptomScore),
-    calculate_env_score(EnvFactors, Environment, EnvScore),
+% Get possible diseases based on symptoms only
+possible_diseases(Symptoms, Disease, Confidence) :-
+    disease(Disease, _, RequiredSymptoms, _),
+    calculate_confidence(RequiredSymptoms, Symptoms, Confidence),
+    Confidence > 0.
+
+% Get symptoms for a specific disease
+disease_symptoms(Disease, Symptoms) :-
+    disease(Disease, _, Symptoms, _).
+
+% Get disease type
+disease_type(Disease, Type) :-
+    disease(Disease, Type, _,_).
+
+% Get environmental factors for a disease
+disease_environment(Disease, Environment) :-
+    disease(Disease, _, _, Environment).
+
+% List all diseases
+list_all_diseases(Diseases) :-
+    findall(Disease, disease(Disease, _, _, _), Diseases).
+
+% Weighted diagnosis (for backward compatibility)
+diagnose_weighted(Symptoms, Environment, Disease, Score ) :-
+    disease(Disease, _, RequiredSymptoms, EnvFactors),
+    calculate_confidence(RequiredSymptoms, Symptoms, SymptomScore),
+    calculate_confidence(EnvFactors, Environment, EnvScore),
     Score is (SymptomScore * 0.7 + EnvScore * 0.3),
     Score >= 0.6.
-

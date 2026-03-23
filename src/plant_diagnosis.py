@@ -19,7 +19,7 @@ class PlantDiagnoser:
         '''
         self.prolog = Prolog()
         self.load_knowledge_base(prolog_file)
-        self.symptom_descriptions = self._load_symptom_descriptions()
+        self.symptom_descriptions = self._load_symptoms_descriptions()
 
 
     def load_knowledge_base(self, prolog_file:str):
@@ -30,9 +30,9 @@ class PlantDiagnoser:
 
             self.prolog.consult(prolog_file)
         except Exception as e:
-            raise LoadingError(f"Could not load: {prolog_file}")
+            raise LoadingError(f"Could not load: {prolog_file}, {e}")
     
-    def _load_symptons_descriptions(self) -> Dict[str,str]:
+    def _load_symptoms_descriptions(self) -> Dict[str,str]:
         '''Load Symptoms descriptions from PROLOG'''
 
         descriptions = {}
