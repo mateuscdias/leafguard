@@ -8,7 +8,7 @@ symptom(powdering_brown_spots,'Manchas marrons que liberam pó').
 symptom(leaf_yellowing,'Amarelecimento das folhas').
 symptom(leaf_inferior_face_rib_darkening, 'Escurecimento das nervuras').
 symptom(losing_leaves,'Desfolha das plantas').
-symptom(small_dark_circular_spots,'Pequenas manchas circulares').
+symptom(small_dark_circular_spots,'Pequenas manchas pretas circulares concentricas').
 symptom(yellow_halo_around_spot,'Halo amarelado ao redor da lesão').
 symptom(fast_drying_inferior_leaves,'Secamento rápido das folhas inferiores').
 symptom(white_powdering_spots,'Manchas brancas que parecem farinha').
@@ -81,27 +81,225 @@ environmental(high_humidity,'Alta umidade').
 environmental(hotter_temperatures,'Temperaturas quentes').
 environmental(rain,'Chuvas recentes').
 environmental(plagues,'Presença de insetos').
+environmental(none, 'Nao ha fatores reconhecidos').
 
 %fungal diseases supported
 
-disease('Ferrugem Asiática',fungal,[symptom()],[environmental()]).
-disease('Mal do Panamá',fungal,[symptom()],[environmental()]).
-disease('Pinta Preta',fungal,[symptom()],[environmental()]).
-disease('Oídio',fungal,[symptom()],[environmental()]).
-disease('Antracnose',fungal,[symptom()],[environmental()]).
+disease('Ferrugem Asiática',
+    fungal,
+    [symptom(small_dark_spots_on_the_back),symptom(powdering_brown_spots),symptom(losing_leaves)],
+    [environmental(high_humidity),environmental(hotter_temperatures)]
+).
+
+disease('Mal do Panamá',
+    fungal,
+    [symptom(leaf_yellowing),symptom(leaf_hanged_like_a_skirt),symptom(dark_internal_vessels_when_cut)],
+    [environmental(high_humidity),environmental(hotter_temperatures)]
+).
+
+disease('Pinta Preta',
+    fungal,
+    [symptom(small_dark_circular_spots),symptom(yellow_halo_around_spot),symptom(fast_drying_inferior_leaves)],
+    [environmental(high_humidity),environmental(hotter_temperatures)]
+).
+
+disease('Oídio',
+    fungal,
+    [symptom(white_powdering_spots),symptom(new_buds_deformation),symptom(premature_flowers_dropping),symptom(premature_fruits_dropping)],
+    [environmental(high_humidity),environmental(hotter_temperatures)]
+).
+
+disease('Antracnose',
+    fungal,
+    [symptom(dark_and_deep_dry_spots),symptom(leaf_inferior_face_rib_darkening),symptom(branches_points_dying)],
+    [environmental(high_humidity),environmental(hotter_temperatures)]
+).
 
 %bacterial diseases supported
 
-disease('Murcha Bacteriana',bacterial,[symptom()],[environmental()]).
-disease('Cancro Cítrico',bacterial,[symptom()],[environmental()]).
-disease('Podridão',bacterial,[symptom()],[environmental()]).
-disease('Mancha Bacteriana',bacterial,[symptom()],[environmental()]).
-disease('Podridão Mole',bacterial,[symptom()],[environmental()]).
+disease('Murcha Bacteriana',
+    bacterial,
+    [symptom(leaves_drying_during_day),symptom(leaves_recovering_during_night),symptom(vascular_system_darkening),symptom(viscous_liquid_when_cut_stem_dipped_on_water)],
+    [environmental(rain)]
+).
+
+disease('Cancro Cítrico',
+    bacterial,
+    [symptom(brown_rough_spots),symptom(yellow_halo_around_spot),symptom(premature_fruits_dropping),symptom(spots_on_fruits)],
+    [environmental(rain)]
+).
+
+disease('Podridão',
+    bacterial,
+    [symptom(yellow_v_shaped_spots),symptom(leaf_inferior_face_rib_darkening),symptom(strong_rot_smell)],
+    [environmental(rain)]
+).
+
+disease('Mancha Bacteriana',
+    bacterial,
+    [symptom(beige_aquous_spots),symptom(flowers_and_floral_button_falling),symptom(rough_spots_on_fruits)],
+    [environmental(rain)]
+).
+
+disease('Podridão Mole',
+    bacterial,
+    [symptom(gelatinous_tissue_consistency),symptom(rapid_root_desintegration),symptom(rapid_fruit_desintegration),symptom(strong_rot_smell)],
+    [environmental(rain)]
+).
 
 %viral diseases supported
 
-disease('Mosaico Dourado',viral,[symptom()],environmental()).
-disease('Vira-Cabeça',viral,[symptom()],environmental()).
-disease('Mosaico do Mamoeiro',viral,[symptom()],environmental()).
-disease('Tristeza dos Citros',viral,[symptom()],environmental()).
-disease('Mosaico da Mandioca',viral,[symptom()],environmental()).
+disease(
+    'Mosaico Dourado',
+    viral,
+    [symptom(strong_yellow_spots),symptom(leaf_structure_deformated),symptom(grains_size_reduction)],
+    [environmental(plagues)]
+).
+
+disease('Vira-Cabeça',
+    viral,
+    [symptom(bronzening_young_leaves),symptom(purple_spots_on_young_leaves),symptom(curving_of_the_top_of_stem),symptom(concentric_rings)],
+    [environmental(plagues)]
+).
+
+disease('Mosaico do Mamoeiro',
+    viral,
+    [symptom(simple_rings),symptom(green_stripes),symptom(thin_new_leaves)],
+    [environmental(plagues)]
+).
+
+disease('Tristeza dos Citros',
+    viral,
+    [symptom(yellowing_of_whole_plant),symptom(pitting),symptom(smaller_fruits)],
+    [environmental(plagues)]
+).
+
+disease('Mosaico da Mandioca',
+    viral,
+    [symptom(dark_and_light_green_areas),symptom(leaf_structure_deformated),symptom(severe_root_size_reduction)],
+    [environmental(plagues)]
+).
+
+% Diseased caused by verms
+
+disease('Nematoide de Galha',
+    verms,
+    [symptom(root_nodules),symptom(wiltering_on_hotter_hours),symptom(uneven_growing)],
+    [environmental(none)]
+).
+
+disease('Nematoide de Lesao',
+    verms,
+    [symptom(necrotic_root_areas),symptom(smaller_root_system),symptom(aerial_part_yellowing_or_fall)],
+    [environmental(none)]
+).
+
+disease('Nematoide do Cisto',
+    verms,
+    [symptom(verms_on_roots),symptom(intense_leave_yellowing),symptom(smaller_size)],
+    [environmental(none)]
+).
+
+disease('Nematoide Reniforme',
+    verms,
+    [symptom(excess_dirt_on_roots),symptom(improductive_plants),symptom(slow_response_to_fertilization)],
+    [environmental(none)]
+).
+
+disease('Nematoide Cavernicola',
+    verms,
+    [symptom(red_or_dark_spots_on_roots),symptom(falling),symptom(fruits_weight_reduction)],
+    [environmental(none)]
+).
+
+% Checking algorithms
+
+check_symptoms([],_,1.0).
+
+check_symptoms([Symptom|Rest], Symptoms, Confidence) :-
+    (member(Symptom, Symptoms)
+        -> (check_symptoms(Rest, Symptoms, RestConf), Confidence is (1+RestConf)/length([Symptom|Rest]))
+
+        ;(check_symptoms(Rest,Symptoms,RestConf), Confidence is RestConf/ length(Symptom|Rest))
+    ).
+
+check_env([],_,1.0).
+
+check_env([Factor|Rest],Environment,Confidence) :- 
+    (member(Factor, Environment)
+        
+        -> (check_env(Rest, Environment, RestConf), Confidence is (1+RestConf)/length([Factor|Rest]))
+
+        ; (check_env(Rest, Environment, RestConf), Confidence is RestConf/length([Factor|Rest]))
+    ).
+
+% Getting all possible diseases
+
+possible_diseases(Symptoms, Disease, Confidence) :-
+
+    disease(Disease,_,RequiredSymptoms,_),
+    check_symptoms(RequiredSymptoms,Symptoms,Confidence),
+    Confidence > 0.
+
+% Getting the symptoms of a disease
+
+disease_symptoms(Disease, Symptoms) :-
+    
+    disease(Disease,_, RequiredSymptoms, _),
+    Symptoms = RequiredSymptoms.
+
+% Get disease type
+
+disease_type(Disease, Type) :- 
+    disease(Disease, Type,_,_).
+
+% Get environmental factors for a disease
+
+disease_enviroment(Disease, Environment) :-
+    disease(Disease,_,_,Environment).
+
+% List all diseases
+
+list_all_diseases(Diseases) :- 
+    findall(Disease,disease(Disease,_,_,_),Diseases).
+
+% List symptoms per disease
+
+list_symptoms_by_disease(Disease, SymptomsList) :-
+    disease(Disease,_,SymptomsList,_).
+
+
+% Calculation Predicates
+
+calculate_symptom_score([],_,1.0).
+
+calculate_symptom_score([Symptom|Rest],Symptoms,Score) :-
+
+    (member(Symptom,Symptoms)
+        
+        -> calculate_symptom_score(Rest,Symptoms,RestScore), Score is RestScore + (1.0/length([Symptom|Rest]))
+
+    ; calculate_symptom_score(Rest, Symptoms, RestScore), Score is RestScore).
+
+calculate_env_score([],_,1.0).
+
+calculate_env_score([Factor|Rest],Environment,Score) :- 
+    (member(Factor, Environment) 
+        -> calculate_env_score(Rest, Environment, RestScore), Score is RestScore + (1.0/length([Factor|Rest]))
+    ; calculate_env_score(Rest, Environment, RestScore), Score is Restscore ).
+% DIAGNOSING PREDICATES
+
+diagnose(Symptoms,Environment,Disease,Confidence) :-
+    disease(Disease, Type, RequiredSymptoms, EnvFactors),
+    check_symptoms(RequiredSymptoms,Symptoms,SymptomMatch),
+    check_env(EnvFactors, Environment, EnvMatch),
+    Confidence is (SymptomMatch + EnvMatch) / 2,
+    Confidence >= 0.5.
+
+diagnose_weighted(Symptoms, Environment, Disease, Score) :-
+    disease(Disease,Type,RequiredSymptoms,EnvFactors),
+    calculate_symptom_score(RequiredSymptoms,Symptoms,SymptomScore),
+    calculate_env_score(EnvFactors, Environment, EnvScore),
+    Score is (SymptomScore * 0.7 + EnvScore * 0.3),
+    Score >= 0.6.
+
