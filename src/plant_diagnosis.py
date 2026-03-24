@@ -1,14 +1,12 @@
-import os
-import json
-from pyswip import Prolog, Functor, Variable, Query
-from typing import List, Dict, Tuple, Optional
-from exceptions import LoadingError,NotDiagnosisError,NotGettingInformationError
+from pyswip import Prolog
+from typing import List, Dict
+from src.exceptions import LoadingError,NotDiagnosisError,NotGettingInformationError
 
 class PlantDiagnoser:
 
     '''Python API class for plant diseases inference using PROLOG'''
 
-    def __init__(self,prolog_file:str = "diagnoser.pl"):
+    def __init__(self,prolog_file:str = "src/diagnoser.pl"):
 
         '''
         Initialize the diagnosis system
@@ -66,28 +64,34 @@ class PlantDiagnoser:
         results = []
 
         try:
-            symptoms_str = self._list_to_prolog(symptoms)
-            env_str = self._list_to_prolog(environmental_factors)
-
+            symptoms_str = self._list_to_prolog(symptoms,"symptom")
+            env_str = self._list_to_prolog(environmental_factors,"environmental")
             query = f'diagnose({symptoms_str},{env_str},Disease,Confidence)'
-            
-            for result in self.prolog.query(query):
 
+
+            query_results = list(self.prolog.query(query))  # ✅ CLOSES QUERY
+
+            for result in query_results:
                 if result['Confidence'] >= min_confidence:
-                    suggested = self.suggest_additional_symptoms(result['Disease'],symptoms)
+                    suggested = self.suggest_additional_symptoms(
+                        result['Disease'], symptoms
+                    )
 
                     results.append({
-                            'disease': result['Disease'],
-                            'confidence': result['Confidence'],
-                            'symptoms': self.get_disease_symptoms(result['Disease']),
-                            'environmental_factors': self.get_disease_environment(result['Disease']),
-                            'suggested_symptoms': suggested
-                        })
-                    
-                    results.sort(key=lambda x: x['confidence'],reverse=True)
+                        'disease': result['Disease'],
+                        'confidence': result['Confidence'],
+                        'symptoms': self.get_disease_symptoms(result['Disease']),
+                        'environmental_factors': self.get_disease_environment(result['Disease']),
+                        'suggested_symptoms': suggested
+                    })
+
+            results.sort(key=lambda x: x['confidence'], reverse=True)
+
         except Exception as e:
             
             raise NotDiagnosisError(f"Could not diagnose: {e}")
+        
+        return results
     
     def diagnose_with_weights(self, symptoms:List[str],environmental_factors: List[str] = None, min_score:float = 0.6):
 
@@ -109,8 +113,8 @@ class PlantDiagnoser:
         results = []
 
         try:
-            symptoms_str = self._list_to_prolog(symptoms)
-            env_str = self._list_to_prolog(environmental_factors)
+            symptoms_str = self._list_to_prolog(symptoms,"symptom")
+            env_str = self._list_to_prolog(environmental_factors,"environmental")
 
             for result in self.prolog.query(f"diagnose_weighted({symptoms_str},{env_str},Disease,Score)"):
 
@@ -142,7 +146,7 @@ class PlantDiagnoser:
         results = []
 
         try:
-            symptoms_str = self._list_to_prolog(symptoms)
+            symptoms_str = self._list_to_prolog(symptoms,"symptom")
             
             for result in self.prolog.query(f"possible_diseases({symptoms_str},Disease,Confidence)"):
 
@@ -165,7 +169,7 @@ class PlantDiagnoser:
         symptoms = []
 
         try:
-            for result in self.prolog.query(f"disease_symptoms({disease}, Symptoms)"):
+            for result in self.prolog.query(f"disease_symptoms({self._quote_atom(disease)}, Symptoms)"):
 
                 symptoms = result["Symptoms"]
                 break
@@ -178,7 +182,7 @@ class PlantDiagnoser:
 
         """Get the type of disease (fungal, bacterial, viral)"""
         try:
-            for result in self.prolog.query(f"disease_type({disease}, Type)"):
+            for result in self.prolog.query(f"disease_type({self._quote_atom(disease)}, Type)"):
                 return result['Type']
         except Exception as e:
             raise NotGettingInformationError(f"Error getting disease type: {e}")
@@ -188,7 +192,7 @@ class PlantDiagnoser:
         """Get environmental factors for a specific disease"""
         environment = []
         try:
-            for result in self.prolog.query(f"disease_environment({disease}, Environment)"):
+            for result in self.prolog.query(f"disease_environment({self._quote_atom(disease)}, Environment)"):
                 environment = result['Environment']
                 break
         except Exception as e:
@@ -210,23 +214,35 @@ class PlantDiagnoser:
         """Get all available symptoms with descriptions"""
         return self.symptom_descriptions
     
-    def _list_to_prolog(self, lst: List[str]) -> str:
-
-        '''Convert Python list to PROLOG list syntax'''
-        
+    def _list_to_prolog(self, lst: List[str], wrapper: str = None) -> str:
         if not lst:
             return "[]"
-        
+
         escaped_items = []
 
         for item in lst:
-
             escaped_item = item.replace("'", "\\'")
-            escaped_items.append(f"'{escaped_item}'")
-        
+            
+            if wrapper:
+                escaped_items.append(f"{wrapper}('{escaped_item}')")
+            else:
+                escaped_items.append(f"'{escaped_item}'")
+
         return "[" + ", ".join(escaped_items) + "]"
     
     def suggest_additional_symptoms(self, disease: str, observed_symptoms: List[str]) -> List[str]:
         """Suggest additional symptoms to check for a suspected disease"""
         all_symptoms = self.get_disease_symptoms(disease)
         return [s for s in all_symptoms if s not in observed_symptoms]
+    
+    def _quote_atom(self, atom: str) -> str:
+        return f"'{atom}'"
+  
+if __name__ == "__main__":
+
+    diag = PlantDiagnoser("./src/diagnoser.pl").diagnose(
+    ["small_dark_circular_spots", "yellow_halo_around_spot"],
+    ["high_humidity"]
+    )
+
+    print(diag)
