@@ -1,0 +1,261 @@
+/* ── RESULTS PANEL ── */
+.results-panel {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  padding: 64px 40px;
+  text-align: center;
+  color: var(--text-light);
+  background: rgba(255,255,255,0.4);
+  border: 1.5px dashed rgba(74,47,26,0.15);
+  border-radius: 28px;
+}
+
+.empty-icon {
+  font-size: 56px;
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+
+.empty-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text-mid);
+  margin-bottom: 10px;
+}
+
+.empty-text {
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* ── LOADING STATE ── */
+.loading-state {
+  padding: 64px 40px;
+  text-align: center;
+}
+
+.spinner {
+  width: 48px; height: 48px;
+  border: 3px solid rgba(90,138,62,0.1);
+  border-top-color: var(--leaf);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text {
+  font-size: 16px;
+  color: var(--text-mid);
+  font-style: italic;
+}
+
+/* ── RESULT CARD ── */
+.result-card {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.8);
+  border-radius: 20px;
+  padding: 28px;
+  animation: slideIn 0.4s ease-out;
+  box-shadow: 0 8px 32px rgba(44,26,14,0.04);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-card.top {
+  border-color: rgba(90,138,62,0.2);
+  background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(184,217,138,0.15) 100%);
+  box-shadow: 0 12px 48px rgba(90,138,62,0.1);
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+.card-disease {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--soil);
+  line-height: 1.2;
+}
+
+.top-badge {
+  display: none;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--leaf);
+  background: rgba(90,138,62,0.12);
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+.result-card.top .top-badge { display: block; }
+
+.confidence-bar-wrap {
+  margin-bottom: 20px;
+}
+
+.confidence-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.confidence-text {
+  font-size: 13px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+
+.confidence-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--leaf);
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.confidence-bar {
+  height: 8px;
+  background: rgba(74,47,26,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confidence-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--leaf), var(--leaf-mid));
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* type badge */
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.type-badge.fungal    { background: rgba(160,120,60,0.12); color: #6b4a1a; }
+.type-badge.bacterial { background: rgba(40,100,180,0.1);  color: #1a4a8a; }
+.type-badge.viral     { background: rgba(180,50,50,0.1);   color: #8a1a1a; }
+.type-badge.verms     { background: rgba(100,60,140,0.1);  color: #5a1a7a; }
+
+/* card sections */
+.card-section {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(74,47,26,0.08);
+}
+
+.card-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+.symptom-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.symptom-tag {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.7);
+  color: var(--text-mid);
+  border: 1px solid rgba(74,47,26,0.06);
+}
+
+.symptom-tag.present {
+  background: rgba(90,138,62,0.12);
+  color: var(--moss);
+  font-weight: 500;
+  border-color: transparent;
+}
+
+.symptom-tag.suggested {
+  background: rgba(212,165,42,0.1);
+  color: #7a5a10;
+  border: 1px dashed rgba(212,165,42,0.4);
+}
+
+/* results header */
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.results-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  color: var(--soil);
+  font-weight: 600;
+}
+
+.results-count {
+  font-size: 13px;
+  color: var(--text-mid);
+  background: rgba(74,47,26,0.06);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* ── DISCLAIMER ── */
+.disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(212,165,42,0.08);
+  border: 1px solid rgba(212,165,42,0.2);
+  border-radius: 16px;
+  font-size: 13.5px;
+  color: #7a5a10;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+.disclaimer-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+
+@media (max-width: 900px) {
+  .results-panel { grid-column: 1; }
+}
