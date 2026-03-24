@@ -1,9 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.css';
 
 export default function LandingPage() {
   const navigate = useNavigate();
+
+  const words = ['precisão', 'tecnologia', 'segurança', 'rapidez', 'Leaf Guard'];
+  const [wordIndex, setWordIndex] = useState(0);
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentWord = words[wordIndex];
+    // Velocidade de digitação e deleção
+    const typeSpeed = isDeleting ? 50 : 120;
+
+    const timer = setTimeout(() => {
+      if (!isDeleting && text === currentWord) {
+        // Pausa quando a palavra está completa
+        setTimeout(() => setIsDeleting(true), 2000);
+      } else if (isDeleting && text === '') {
+        // Próxima palavra quando termina de apagar
+        setIsDeleting(false);
+        setWordIndex((prev) => (prev + 1) % words.length);
+      } else {
+        // Adiciona ou remove 1 caractere
+        setText(currentWord.substring(0, text.length + (isDeleting ? -1 : 1)));
+      }
+    }, typeSpeed);
+
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, wordIndex]);
 
   return (
     <div className="lp-root">
@@ -36,8 +63,8 @@ export default function LandingPage() {
 
           <h1 className="lp-title">
             Proteja suas<br />
-            <em>plantações</em><br />
-            com precisão
+            plantações<br />
+            com <span className="word-typist">{text}</span><span className="typing-cursor">|</span>
           </h1>
 
           <p className="lp-desc">

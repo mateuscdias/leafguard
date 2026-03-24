@@ -72,10 +72,10 @@ export const symptoms = {
 };
 
 export const envFactors = [
-  { id: 'high_humidity',       label: '💧 Alta umidade' },
-  { id: 'hotter_temperatures', label: '🌡️ Temperaturas quentes' },
-  { id: 'rain',                label: '🌧️ Chuvas recentes' },
-  { id: 'plagues',             label: '🐜 Presença de insetos' },
+  { id: 'high_humidity',       label: '💧 Umidade alta prolongada' },
+  { id: 'hotter_temperatures', label: '🌡️ Temperaturas intensas e constantes' },
+  { id: 'rain',                label: '🌧️ Chuvas frequentes' },
+  { id: 'plagues',             label: '🐜 Presença visível de insetos' },
 ];
 
 export const DISEASE_INFO = {

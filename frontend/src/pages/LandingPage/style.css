@@ -195,6 +195,26 @@ body {
   letter-spacing: -1.5px;
 }
 
+.word-typist {
+  display: inline-block;
+  color: var(--leaf-mid);
+  font-style: normal;
+  font-weight: inherit;
+}
+
+.typing-cursor {
+  display: inline-block;
+  color: var(--leaf-mid);
+  font-weight: 300;
+  animation: blinkCursor 1s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 .lp-title em {
   font-style: italic;
   font-weight: 400;
