@@ -60,7 +60,23 @@
   letter-spacing: 0.3px;
   transition: color 0.2s;
 }
-.lp-nav-links a:hover { color: var(--leaf); }
+.lp-nav-links a:hover { color: var(--leaf);
+}
+.lp-nav-cta {
+  padding: 10px 22px;
+  background: var(--soil);
+  color: white !important;
+  border-radius: 50px;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.4px !important;
+  transition: background 0.2s, transform 0.2s !important;
+}
+.lp-nav-cta:hover {
+  background: var(--leaf) !important;
+  color: white !important;
+  transform: translateY(-1px);
+}
 
 @media (max-width: 900px) {
   .lp-nav { padding: 20px 24px; }

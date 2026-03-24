@@ -17,8 +17,8 @@ export default function Header() {
           <span className="lp-logo-text">LeafGuard</span>
         </a>
         <ul className="lp-nav-links">
-          <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('/'); }}>Início</a></li>
           <li><a href="#">Detecção Ativa</a></li>
+          <li><a href="#" className="lp-nav-cta" onClick={(e) => { e.preventDefault(); navigate('/'); }}>Início</a></li>
         </ul>
       </nav>
     </header>
